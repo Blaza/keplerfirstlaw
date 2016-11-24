@@ -5,7 +5,7 @@ var Orbiter = (function() {
   // set the offset of the Sun's x coordinate from center
   var sunOffset = 50;
   // set padding for canvas
-  var canvasPadding = 10;
+  var cPadding = 20;
 
   // private methods
   function resetCanvas() {
@@ -15,10 +15,10 @@ var Orbiter = (function() {
   //  calculate parameters needed for drawing the orbit
   function calcParams(a, e) {
     // calculate the center of the canvas, keeping in mind the padding
-    var width = r.width - 2*canvasPadding;
-    var height = r.height - 2*canvasPadding;
-    var centerX = width / 2 + canvasPadding;
-    var centerY = height / 2 + canvasPadding;
+    var width = r.width - 2*cPadding;
+    var height = r.height - 2*cPadding;
+    var centerX = width / 2 + cPadding;
+    var centerY = height / 2 + cPadding;
     var sunX = centerX - sunOffset;
     var sunY = centerY;
 
@@ -30,7 +30,7 @@ var Orbiter = (function() {
 
     // Scaling factor for astronomical unit so the ellipse will fit to canvas.
     // Formula derived on paper with some basic geometry.
-    var AU = Math.min(sunX/(a-c), (width-sunX)/(a+c));
+    var AU = Math.min((sunX-cPadding)/(a-c), (width-sunX+cPadding)/(a+c));
 
     //scale a, b and c to reflect AU
     aAU = a*AU;
