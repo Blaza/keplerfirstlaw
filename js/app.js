@@ -1,7 +1,10 @@
 // singleton class Orbiter which handles all drawing
 var Orbiter = (function() {
   // private variables
+  // Raphael instance which controls all drawing
   var r = null;
+  // current orbit parameters
+  var params = {};
   // set the offset of the Sun's x coordinate from center
   var sunOffset = 50;
   // set padding for canvas
@@ -40,29 +43,36 @@ var Orbiter = (function() {
     ellipseX = sunX + cAU;
     ellipseY = sunY;
 
-
-    var params = { a: aAU,
-                   b: bAU,
-                   c: cAU,
-                   cX: centerX,
-                   cY: centerY,
-                   eX: ellipseX,
-                   eY: ellipseY,
-                   sX: sunX,
-                   sY: sunY,
-                   AU: AU };
+    // set objects parameters params
+    params = { a: aAU,
+               b: bAU,
+               c: cAU,
+               cX: centerX,
+               cY: centerY,
+               eX: ellipseX,
+               eY: ellipseY,
+               sX: sunX,
+               sY: sunY,
+               AU: AU };
 
     return params;
   }
 
-  function drawOrbit(sma, ecc) {
-    params = calcParams(sma, ecc);
-
+  function drawOrbit() {
     // draw the orbit ellipse
     r.ellipse(params.eX, params.eY, params.a, params.b).attr({stroke:'white'});
 
     // draw the sun
     r.circle(params.sX, params.sY, 8, 8).attr({fill:'yellow'})
+  }
+
+  function drawScale() {
+    r.path("M440,50 L600,50").attr({stroke:'gray', 'stroke-width':4});
+    var AU = params.AU;
+    if(AU < 20){
+      cmp = 50/AU;
+      scaleRef = 0;
+    }
   }
 
   return { // public interface
@@ -75,7 +85,9 @@ var Orbiter = (function() {
     setOrbit: function(sma, ecc) {
       resetCanvas();
       // turn arguments to numbers for security
-      drawOrbit(parseFloat(sma),parseFloat(ecc));
+      calcParams(parseFloat(sma),parseFloat(ecc));
+      drawOrbit();
+      drawScale();
     }
   };
 })();
