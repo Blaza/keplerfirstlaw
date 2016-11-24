@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html "no-js" lang="en">
+<head>
+  <!-- title -->
+    <title>Kepler's First Law</title>
+
+  <!-- css -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/non-responsive.css">
+
+  <!-- js -->
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/raphael/2.1.4/raphael-min.js"></script>
+</head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>Kepler's first law of planetary motion <small>Simulation of planetary orbits</small></h1>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div id="canvas"></div>
+        </div>
+        <div class="col-md-3">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="smaInput" class="control-label">Orbit's semi-major axis</label>
+              <div class="input-group">
+                <input type="number" min="0.1" step="0.1" class="form-control" id="smaInput" placeholder="Orbit's semi-major axis" value="1">
+                <div class="input-group-addon">AU</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="eccInput" class="control-label">Orbit's eccentricity</label>
+              <input type="number" min="0" max="0.99999" step="0.01" class="form-control" id="eccInput" placeholder="Orbit's eccentricity" value="0.0167">
+            </div>
+            <div class="form-group">
+              <span class="btn btn-default" id="setButton" role="button">Set parameters</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  <script src="js/app.js"></script>
+  </body>
+</html>
