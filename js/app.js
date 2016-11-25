@@ -9,7 +9,7 @@ var Orbiter = (function() {
   var sunOffset = 50;
   // set padding for canvas
   var cPadding = 20;
-  // set scale for period times. This will represent Earth orbit animation time
+  // scale for period times. This will represent Earth orbit animation time
   // and scale to that.
   var periodScale = 5000;
 
@@ -109,6 +109,9 @@ var Orbiter = (function() {
     var AU = params.AU;
     var scaleRef;
     var L;
+
+    // Using some math done on paper we calculate the needed scale factor and
+    // it's size in pixels for the scale.
     if(AU < 20){
       var cmp = 50/AU;
       var i = 0;
@@ -148,9 +151,11 @@ var Orbiter = (function() {
        setUpAnimation();
       }
     },
-    setOrbit: function(sma, ecc) {
+    setOrbit: function(sma, ecc, art) {
       resetCanvas();
-      // turn arguments to numbers for security
+      // one Earth orbit time will be 1000ms / art yrs/s
+      periodScale = 1000 / parseFloat(art);
+      // turn arguments to numbers for safety
       calcParams(parseFloat(sma),parseFloat(ecc));
       drawOrbit();
       drawScale();
@@ -161,13 +166,15 @@ var Orbiter = (function() {
 $(function() {
   var sma = $("#smaInput").val();
   var ecc = $("#eccInput").val();
+  var art = $("#artInput").val();
   Orbiter.load("canvas", 616, 616);
-  Orbiter.setOrbit(sma, ecc);
+  Orbiter.setOrbit(sma, ecc, art);
 
   $("#setButton").click(function(){
     var sma = $("#smaInput").val();
     var ecc = $("#eccInput").val();
-    Orbiter.setOrbit(sma, ecc);
+    var art = $("#artInput").val();
+    Orbiter.setOrbit(sma, ecc, art);
   });
 });
 
