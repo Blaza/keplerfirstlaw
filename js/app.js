@@ -15,6 +15,27 @@ var Orbiter = (function() {
     r.clear();
   }
 
+  function setUpAnimation(){
+    Raphael.el.animateAlong = function(path, duration, repetitions) {
+      var element = this;
+      element.path = path;
+      element.pathLen = element.path.getTotalLength();
+      duration = (typeof duration === "undefined") ? 5000 : duration;
+      repetitions = (typeof repetitions === "undefined") ? 1 : repetitions;
+
+      r.customAttributes.along = function(v) {
+      var point = this.path.getPointAtLength(v * this.pathLen),
+          attrs = { cx: point.x, cy: point.y };
+      this.rotateWith && (attrs.transform = 'r'+point.alpha);
+      return attrs;
+      };
+
+      element.attr({along:0});
+      var anim = Raphael.animation({along: 1}, duration);
+      element.animate(anim.repeat(repetitions));
+    };
+  }
+
   //  calculate parameters needed for drawing the orbit
   function calcParams(a, e) {
     // calculate the center of the canvas, keeping in mind the padding
@@ -60,10 +81,19 @@ var Orbiter = (function() {
 
   function drawOrbit() {
     // draw the orbit ellipse
-    r.ellipse(params.eX, params.eY, params.a, params.b).attr({stroke:'white'});
+    var ellipse = "M" + (params.eX - params.a) + "," + params.eY + " a " +
+                   params.a + "," + params.b + " 0 1,1 0,0.1";
+
+    var orbit = r.path(ellipse).attr({stroke:'white'});
+
+    // draw planet at perihelion
+    var planet = r.circle(params.sX-(params.a-params.c),
+                           params.sY, 10).attr({fill:'lightblue'})
+
+    planet.animateAlong(orbit, 5000,Infinity);
 
     // draw the sun
-    r.circle(params.sX, params.sY, 10, 10).attr({fill:'yellow'})
+    r.circle(params.sX, params.sY, 10).attr({fill:'yellow'})
     r.text(params.sX, params.sY - 20, "Sun").attr({fill:'#eeeeee'});
   }
 
@@ -107,6 +137,7 @@ var Orbiter = (function() {
       if(!r) {
         r = Raphael(containerStr, width, height);
         r.canvas.style.backgroundColor = "#030321";
+       setUpAnimation();
       }
     },
     setOrbit: function(sma, ecc) {
