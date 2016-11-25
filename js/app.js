@@ -9,6 +9,9 @@ var Orbiter = (function() {
   var sunOffset = 50;
   // set padding for canvas
   var cPadding = 20;
+  // set scale for period times. This will represent Earth orbit animation time
+  // and scale to that.
+  var periodScale = 5000;
 
   // private methods
   function resetCanvas() {
@@ -53,6 +56,9 @@ var Orbiter = (function() {
     // calculate focus point distance from ellipse center
     var c = Math.sqrt(a*a - b*b);
 
+    // calculate orbit period using Kepler's third law a^3/T^2 = const.
+    var period = periodScale * Math.sqrt(a*a*a);
+
     // Scaling factor for astronomical unit so the ellipse will fit to canvas.
     // Formula derived on paper with some basic geometry.
     var AU = Math.min((sunX-cPadding)/(a-c), (width-sunX+cPadding)/(a+c));
@@ -75,6 +81,7 @@ var Orbiter = (function() {
                eY: ellipseY,
                sX: sunX,
                sY: sunY,
+               T: period,
                AU: AU };
 
     return params;
@@ -89,9 +96,9 @@ var Orbiter = (function() {
 
     // draw planet at perihelion
     var planet = r.circle(params.sX-(params.a-params.c),
-                           params.sY, 10).attr({fill:'lightblue'})
+                           params.sY, 7).attr({fill:'lightblue'})
 
-    planet.animateAlong(orbit, 5000,Infinity);
+    planet.animateAlong(orbit, params.T, Infinity);
 
     // draw the sun
     r.circle(params.sX, params.sY, 10).attr({fill:'yellow'})
