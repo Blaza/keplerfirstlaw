@@ -63,7 +63,8 @@ var Orbiter = (function() {
     r.ellipse(params.eX, params.eY, params.a, params.b).attr({stroke:'white'});
 
     // draw the sun
-    r.circle(params.sX, params.sY, 8, 8).attr({fill:'yellow'})
+    r.circle(params.sX, params.sY, 10, 10).attr({fill:'yellow'})
+    r.text(params.sX, params.sY - 20, "Sun").attr({fill:'#eeeeee'});
   }
 
   function drawScale() {
