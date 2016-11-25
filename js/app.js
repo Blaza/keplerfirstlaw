@@ -67,12 +67,38 @@ var Orbiter = (function() {
   }
 
   function drawScale() {
-    r.path("M440,50 L600,50").attr({stroke:'gray', 'stroke-width':4});
     var AU = params.AU;
+    var scaleRef;
+    var L;
     if(AU < 20){
-      cmp = 50/AU;
-      scaleRef = 0;
+      var cmp = 50/AU;
+      var i = 0;
+      do {
+        scaleRef = Math.pow(10, i%2==0?i/2:(i-1)/2)*Math.pow(5, i%2);
+        i++;
+      }
+      while(scaleRef < cmp)
     }
+    else if(AU > 150){
+      var cmp = 150/AU;
+      var i = 0;
+      do {
+        scaleRef = Math.pow(10, i%2==0?-i/2:(-i-1)/2)*Math.pow(5, i%2);
+        i++;
+      }
+      while(scaleRef > cmp)
+    }
+    else {
+      scaleRef = 1;
+    }
+
+    L = scaleRef * AU;
+    // draw scale reference and text above it
+    r.path(["M", 515-L/2, 50, "L", 515+L/2, 50]).attr({stroke:'#cccccc',
+                                                       'stroke-width':4});
+    r.text(515, 25,"Scale:\n"+ scaleRef + " AU").attr({fill:'#eeeeee',
+                                               'font-size':14});
+
   }
 
   return { // public interface
