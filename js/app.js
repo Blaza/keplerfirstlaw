@@ -112,7 +112,7 @@ var Orbiter = (function() {
 
     // Using some math done on paper we calculate the needed scale factor and
     // it's size in pixels for the scale.
-    if(AU < 20){
+    if(AU < 50){
       var cmp = 50/AU;
       var i = 0;
       do {
