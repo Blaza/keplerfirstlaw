@@ -1,3 +1,40 @@
+// Utility class for javascript sequences using generators
+var Sequencer = (function() {
+  // First we will define the sequence of all integers
+  function* ints(){
+    yield 0;
+    var i=1;
+    while(true){
+      yield i;
+      yield -i;
+      i++;
+    }
+  }
+  // function used to map a function to every element of generator
+  function* map(it, f) {
+    for (let x of it) {
+      yield f(x);
+    }
+  }
+  // function to filter elements of the generator, using condition function f
+  function* filter(it, f) {
+    for (let x of it) {
+      if (f(x)) {
+        yield x;
+      }
+    }
+  }
+
+  return { // public interface
+    makeSequence: function(f) {
+      return map(ints(), f);
+    },
+    filter: function(it, f){
+      return filter(it, f);
+    }
+  };
+})();
+
 // singleton class Orbiter which handles all drawing
 var Orbiter = (function() {
   // private variables
@@ -105,40 +142,36 @@ var Orbiter = (function() {
     r.text(params.sX, params.sY - 20, "Sun").attr({fill:'#eeeeee'});
   }
 
+  // Calculate the needed reference value for the scale, given the AU size in
+  // pixels. We only get minWidth because maxWidth must be 5*minWidth  to ensure
+  // we always get inside our model of scales 0.05,0.1,0.5,1,5,10,50,...
+  // Using some math done on paper we calculate the needed scale factor and
+  // it's size in pixels for the scale.
+  function calcScaleRef(AU, minWidth){
+    var maxWidth = 5*minWidth;
+    // our sequence can be defined with a formula like below.
+    var seq = Sequencer.makeSequence(i => Math.pow(10, i%2==0 ? i/2 : (i-1)/2)*
+                                       Math.pow(5, Math.abs(i)%2));
+    // We want the first element that is higher than minWidth/AU and lower than
+    // maxWidth/AU. We make a generator which filters our sequence in order to
+    // get such elements
+    var flt = Sequencer.filter(seq, x => (minWidth/AU < x && x < maxWidth/AU))
+    // and return the first (and only) element of that generator.
+    return flt.next()['value'];
+  }
+
   function drawScale() {
     var AU = params.AU;
     var scaleRef;
     var L;
 
-    // Using some math done on paper we calculate the needed scale factor and
-    // it's size in pixels for the scale.
-    if(AU < 50){
-      var cmp = 50/AU;
-      var i = 0;
-      do {
-        scaleRef = Math.pow(10, i%2==0?i/2:(i-1)/2)*Math.pow(5, i%2);
-        i++;
-      }
-      while(scaleRef < cmp)
-    }
-    else if(AU > 150){
-      var cmp = 150/AU;
-      var i = 0;
-      do {
-        scaleRef = Math.pow(10, i%2==0?-i/2:(-i-1)/2)*Math.pow(5, i%2);
-        i++;
-      }
-      while(scaleRef > cmp)
-    }
-    else {
-      scaleRef = 1;
-    }
+    scaleRef = calcScaleRef(AU, 38);
 
     L = scaleRef * AU;
     // draw scale reference and text above it
-    r.path(["M", 515-L/2, 50, "L", 515+L/2, 50]).attr({stroke:'#cccccc',
+    r.path(["M", 510-L/2, 50, "L", 510+L/2, 50]).attr({stroke:'#cccccc',
                                                        'stroke-width':4});
-    r.text(515, 25,"Scale:\n"+ scaleRef + " AU").attr({fill:'#eeeeee',
+    r.text(510, 25,"Scale:\n"+ scaleRef + " AU").attr({fill:'#eeeeee',
                                                'font-size':14});
 
   }
