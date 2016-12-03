@@ -168,7 +168,7 @@ var Orbiter = (function() {
     scaleRef = calcScaleRef(AU, 36);
 
     L = scaleRef * AU;
-    // draw scale reference and text above it
+    // draw scale reference (and vertical ends) and text above it
     r.path(["M", 519-L/2, 47, "L", 519+L/2, 47]).attr({stroke:'#cccccc',
                                                        'stroke-width':2});
     r.path(["M", 519-L/2, 42, "L", 519-L/2, 52]).attr({stroke:'#cccccc',
