@@ -65,7 +65,8 @@ var Orbiter = (function() {
 
       r.customAttributes.along = function(u) {
       var e = params.e;
-      var v = 1-(1/(1-0.5*e))*(e*u*u*u - 1.5*e*u*u + u);
+      var s = 4.2;
+      var v = 1-(1/(1-s*e/6))*(s*e*u*u*u/3 - s*e*u*u/2 + u);
       var point = this.path.getPointAtLength(v * this.pathLen),
           attrs = { cx: point.x, cy: point.y };
       this.rotateWith && (attrs.transform = 'r'+point.alpha);
