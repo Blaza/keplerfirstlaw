@@ -119,6 +119,7 @@ var Orbiter = (function() {
                sX: sunX,
                sY: sunY,
                T: period,
+               e: e,
                AU: AU };
 
     return params;
